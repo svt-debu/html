@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Sexton frågor om skillnaderna mellan normalarbetstid, produktionsarbetstid och personlig arbetstid på SVT, med förklaring och paragrafhänvisning till varje svar.">
+<meta name="theme-color" content="#14120f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Arbetstidsprovet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { color-scheme: dark; }
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Arbetstidsprovet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground:#14120f; --surface:#1f1b17; --surface-2:#2a2420; --line:#3a322b;
+    --ink:#f5f0ea; --ink-2:#b8aea3; --ink-3:#8b8177;
+    --accent:#e97132; --accent-dim:#3a2418;
+    --ok:#6ec83f; --ok-dim:#1d2c13;
+    --nara:#f0b429; --nara-dim:#33270c;
+    --blue:#3fb3e0; --blue-dim:#132b36;
+  }
+  html, body { height: 100%; background: var(--ground); }
+  body {
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    font-size: 16px; line-height: 1.55;
+    padding-inline: 18px; padding-block: 0 0;
+    -webkit-text-size-adjust: 100%;
+  }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
+  h1, h2, .kvitto-poang { font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif; margin: 0; text-wrap: balance; }
+  h1 { font-size: clamp(32px, 9vw, 40px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(20px, 5.2vw, 24px); font-weight: 600; line-height: 1.32; }
+  p { margin: 0; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+
+  /* knappar */
+  button {
+    font: inherit; cursor: pointer; border: none; border-radius: 12px;
+    background: var(--accent); color: #17100a; font-weight: 600;
+    padding: 16px 22px; font-size: 16.5px; width: 100%;
+    transition: filter .15s ease;
+  }
+  button:hover { filter: brightness(1.08); }
+  button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  button.ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--line); }
+  button.ghost:hover { color: var(--ink); }
+  .actionbar {
+    position: sticky; bottom: 0; z-index: 5;
+    padding-block: 14px 18px; margin-top: auto;
+    background: linear-gradient(to top, var(--ground) 62%, rgba(20,18,15,0));
+    display: flex; flex-direction: column; gap: 9px;
+  }
+
+  /* startvy */
+  .intro { display: flex; flex-direction: column; gap: 20px; padding-block: 44px 0; }
+  .intro .lead { color: var(--ink-2); font-size: 16.5px; }
+  .forms { display: flex; flex-direction: column; gap: 8px; }
+  .form-chip {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 13px 15px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    border-left: 3px solid var(--c);
+  }
+  .form-chip b { font-size: 14.5px; font-weight: 600; color: var(--c); }
+  .form-chip span { font-size: 12.5px; color: var(--ink-3); text-align: right; }
+  .f1 { --c: var(--blue); } .f2 { --c: var(--accent); } .f3 { --c: var(--ok); }
+  .lugn {
+    background: var(--surface); border-radius: 10px; padding: 15px 16px;
+    font-size: 14.5px; color: var(--ink-2); border: 1px solid var(--line);
+  }
+  .rekord { font-size: 13px; color: var(--ink-3); text-align: center; }
+
+  /* provvy */
+  .toppbar {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: var(--ground); padding-block: 16px 12px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .toprad { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .counter { font-size: 12.5px; color: var(--ink-3); letter-spacing: 0.04em; }
+  .tally { font-size: 12.5px; color: var(--ink-3); }
+  .tally b { color: var(--ok); font-weight: 600; }
+  .rail { display: flex; gap: 3px; }
+  .tick { height: 4px; flex: 1; border-radius: 2px; background: var(--surface-2); }
+  .tick.ok { background: var(--ok); }
+  .tick.nara { background: var(--nara); }
+  .tick.nu { background: var(--accent); }
+
+  .qcard { display: flex; flex-direction: column; gap: 18px; padding-top: 6px; }
+  .tag {
+    align-self: flex-start; font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--blue); background: var(--blue-dim);
+    padding: 4px 9px; border-radius: 5px;
+  }
+  .opts { display: flex; flex-direction: column; gap: 9px; }
+  .opt {
+    display: flex; gap: 12px; align-items: flex-start; text-align: left;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
+    padding: 15px 16px; color: var(--ink); font-weight: 400;
+    font-size: 15.5px; line-height: 1.45; min-height: 56px;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--ink-3); background: var(--surface-2); filter: none; }
+  .opt:disabled { cursor: default; }
+  .opt .key {
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 600;
+    color: var(--ink-3); flex: 0 0 auto; padding-top: 2px; min-width: 13px;
+  }
+  .opt.ratt { border-color: var(--ok); background: var(--ok-dim); }
+  .opt.ratt .key { color: var(--ok); }
+  .opt.valt { border-color: var(--nara); background: var(--nara-dim); }
+  .opt.valt .key { color: var(--nara); }
+  .opt.blek { opacity: .45; }
+
+  .svar {
+    border-left: 3px solid var(--c); background: var(--surface);
+    border-radius: 0 11px 11px 0; padding: 16px 17px;
+    display: flex; flex-direction: column; gap: 9px;
+  }
+  .svar.r { --c: var(--ok); } .svar.n { --c: var(--nara); }
+  .svar .dom { font-weight: 600; font-size: 15.5px; color: var(--c); }
+  .svar .txt { color: var(--ink-2); font-size: 14.5px; }
+  .svar .kalla { font-size: 12.5px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 9px; }
+
+  /* resultat */
+  .res { display: flex; flex-direction: column; gap: 22px; padding-block: 34px 0; }
+  .score { display: flex; align-items: baseline; gap: 11px; }
+  .score .big { font-family: "Bricolage Grotesque", sans-serif; font-size: 66px; font-weight: 800; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .score .av { color: var(--ink-3); font-size: 17px; }
+  .omdome { color: var(--ink-2); }
+  .omdome b { color: var(--ink); }
+  .kats { display: flex; flex-direction: column; gap: 9px; }
+  .kat { display: grid; grid-template-columns: 1fr 68px 40px; gap: 11px; align-items: center; font-size: 14px; }
+  .kat .namn { color: var(--ink-2); }
+  .bar { height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--ok); }
+  .bar i.halv { background: var(--nara); }
+  .kat .tal { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--ink-3); text-align: right; }
+  .miss { display: flex; flex-direction: column; gap: 11px; }
+  .miss-item { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--nara); border-radius: 0 10px 10px 0; padding: 14px 15px; display: flex; flex-direction: column; gap: 6px; }
+  .miss-item .fraga { font-weight: 500; font-size: 14.5px; }
+  .miss-item .ratt { font-size: 14px; color: var(--ok); }
+  .miss-item .kalla { font-size: 12.5px; color: var(--ink-3); }
+
+  /* kvitto */
+  .kvitto-vy { display: flex; flex-direction: column; gap: 18px; padding-block: 34px 0; }
+  .namnfalt { display: flex; flex-direction: column; gap: 7px; }
+  .namnfalt label { font-size: 13px; color: var(--ink-3); }
+  .namnfalt input {
+    font: inherit; font-size: 16px; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 10px; padding: 13px 14px; width: 100%;
+  }
+  .namnfalt input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .kvitto {
+    background: linear-gradient(160deg, #241d17 0%, #1b1713 58%, #1f1b17 100%);
+    border: 1px solid #4a3a2b; border-radius: 16px; padding: 26px 24px 24px;
+    display: flex; flex-direction: column; gap: 18px; position: relative; overflow: hidden;
+  }
+  .kvitto::after {
+    content: ""; position: absolute; inset: auto -40px -60px auto;
+    width: 190px; height: 190px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(233,113,50,.16), transparent 68%);
+  }
+  .kvitto-topp { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .kvitto-topp .märke { font-size: 10.5px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+  .kvitto-topp .datum { font-size: 12px; color: var(--ink-3); }
+  .kvitto-namn { font-size: 19px; font-weight: 600; }
+  .kvitto-namn.tom { color: var(--ink-3); font-weight: 400; font-size: 16px; }
+  .kvitto-rad { display: flex; align-items: baseline; gap: 10px; }
+  .kvitto-poang { font-size: 46px; font-weight: 800; line-height: 1; color: var(--ok); font-variant-numeric: tabular-nums; }
+  .kvitto-av { color: var(--ink-2); font-size: 15px; }
+  .kvitto-omr { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    font-size: 11.5px; padding: 4px 9px; border-radius: 20px;
+    background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line);
+  }
+  .pill.full { background: var(--ok-dim); color: var(--ok); border-color: #2f4a1f; }
+  .kvitto-fot { font-size: 12.5px; color: var(--ink-3); border-top: 1px solid #3a2e24; padding-top: 13px; }
+  .uppmaning {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--accent-dim); border: 1px solid #5a3a22; border-radius: 12px; padding: 15px 16px;
+  }
+  .uppmaning .ikon { font-size: 19px; line-height: 1.2; }
+  .uppmaning .txt { font-size: 14.5px; color: #f0d5c0; }
+  .uppmaning .txt b { color: #ffd9bd; }
+
+  footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-3); padding-bottom: 26px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <section id="intro" class="intro">
+    <div>
+      <div class="eyebrow">SVT · arbetstidsavtalen</div>
+      <h1>Arbetstidsprovet</h1>
+    </div>
+    <p class="lead">Sexton frågor om skillnaderna mellan de tre arbetstidsformerna. Tanken är att det ska bli lättare att lägga scheman som blir bra för både verksamheten och de som jobbar i den.</p>
+
+    <div class="forms">
+      <div class="form-chip f1"><b>Normalarbetstid</b><span>39 t 10 m · 07–18 mån–fre</span></div>
+      <div class="form-chip f2"><b>Produktionsarbetstid</b><span>36,5 t · alla veckans dagar</span></div>
+      <div class="form-chip f3"><b>Personlig arbetstid</b><span>39 t 10 m · fri förläggning</span></div>
+    </div>
+
+    <p class="lugn">Ingen rättar och ingen ser hur det går. Resultatet stannar i din egen telefon. Varje svar förklaras, så det går lika bra att gissa sig fram och lära sig på vägen.</p>
+
+    <div class="actionbar">
+      <button id="start">Sätt igång</button>
+      <span class="rekord" id="rekord"></span>
+    </div>
+  </section>
+
+  <section id="prov" hidden>
+    <div class="toppbar">
+      <div class="toprad">
+        <span class="counter mono" id="counter">Fråga 1 av 16</span>
+        <span class="tally" id="tally"><b>0</b> rätt</span>
+      </div>
+      <div class="rail" id="rail"></div>
+    </div>
+    <div class="qcard">
+      <span class="tag" id="kat">Formerna</span>
+      <h2 id="fraga">—</h2>
+      <div class="opts" id="opts"></div>
+      <div id="svar" hidden></div>
+    </div>
+    <div class="actionbar"><button id="nasta" hidden>Nästa fråga</button></div>
+  </section>
+
+  <section id="resultat" class="res" hidden>
+    <div>
+      <div class="eyebrow">Så gick det</div>
+      <div class="score"><span class="big mono" id="poang">0</span><span class="av">av 16 rätt</span></div>
+    </div>
+    <p class="omdome" id="omdome"></p>
+    <div>
+      <div class="eyebrow" style="margin-bottom:11px">Per område</div>
+      <div class="kats" id="kats"></div>
+    </div>
+    <div id="missblock" hidden>
+      <div class="eyebrow" style="margin-bottom:11px">Värt att titta en gång till på</div>
+      <div class="miss" id="miss"></div>
+    </div>
+    <div class="actionbar">
+      <button id="tillkvitto">Visa mitt kvitto</button>
+      <button class="ghost" id="omstart">Gör om provet</button>
+    </div>
+  </section>
+
+  <section id="kvittovy" class="kvitto-vy" hidden>
+    <div>
+      <div class="eyebrow">Klart</div>
+      <h2>Ditt kvitto</h2>
+    </div>
+
+    <div class="namnfalt">
+      <label for="namn">Skriv ditt namn om du vill ha med det</label>
+      <input id="namn" type="text" placeholder="För- och efternamn" autocomplete="name" maxlength="42">
+    </div>
+
+    <div class="kvitto" id="kvitto">
+      <div class="kvitto-topp">
+        <span class="märke">Arbetstidsprovet · SVT</span>
+        <span class="datum mono" id="kdatum">—</span>
+      </div>
+      <div class="kvitto-namn tom" id="knamn">Genomfört prov</div>
+      <div class="kvitto-rad">
+        <span class="kvitto-poang mono" id="kpoang">0</span>
+        <span class="kvitto-av">av 16 rätt</span>
+      </div>
+      <div class="kvitto-omr" id="komr"></div>
+      <div class="kvitto-fot">Normalarbetstid · Produktionsarbetstid · Personlig arbetstid</div>
+    </div>
+
+    <div class="uppmaning">
+      <span class="ikon">📸</span>
+      <span class="txt"><b>Ta en skärmdump här.</b> Det är enklaste sättet att spara kvittot — inget skickas någonstans och ingenting sparas åt dig. Skicka den gärna vidare till någon du tycker borde göra provet också.</span>
+    </div>
+
+    <div class="actionbar">
+      <button class="ghost" id="omstart2">Gör om provet</button>
+    </div>
+  </section>
+
+  <footer>Provet är gjort för dig som lägger schema, men reglerna gäller oss alla — läs gärna med oavsett roll. Bygger på Journalistavtalet Public Service 2025–2027, Unionens avtal för Public Service 2025–2027, SVT:s lokala arbetstidsavtal från 17 juni 2022 samt SVT:s information om ny avräkningsperiod och arbetstidsförkortning. Vid tveksamheter är det avtalen och HR som gäller, inte det här provet.</footer>
+</div>
+
+<script>
+const FRAGOR = [
+  { kat:"Formerna",
+    q:"Vad avgör vilken arbetstidsform en medarbetare ska ha?",
+    alt:["Anställningsformen — tillsvidare eller visstid",
+         "De faktiska arbetsförhållandena",
+         "Vilken avdelning medarbetaren tillhör",
+         "Vad som förhandlats fram individuellt vid anställningen"],
+    ratt:1,
+    fk:"Formen följer arbetet, inte anställningen. Det gäller oavsett om arbetet sker i projekt eller på annat sätt, och vi ska regelbundet följa upp att var och en har den form som faktiskt passar arbetet.",
+    kalla:"Lokalt arbetstidsavtal § 2" },
+
+  { kat:"Mått",
+    q:"Hur lång är ordinarie arbetstid vid normalarbetstid?",
+    alt:["36 timmar och 30 minuter per vecka",
+         "38 timmar per helgfri vecka",
+         "39 timmar och 10 minuter per helgfri vecka",
+         "40 timmar per vecka"],
+    ratt:2,
+    fk:"39 t 10 m per helgfri vecka, alltså 7 t 50 m per dag. Bra att ha i huvudet: ett pass 09–17 med halvtimmesrast ger 7,5 timmar och ligger därmed knappt två timmar under måttet varje vecka.",
+    kalla:"Unionen § 4 mom 2:1 · SJF 6.2.1" },
+
+  { kat:"Formerna",
+    q:"Inom vilken ram förläggs normalarbetstid?",
+    alt:["07.00–18.00, måndag till fredag",
+         "06.00–20.00, måndag till lördag",
+         "Alla veckans dagar mellan 07.00 och 21.00",
+         "Fritt, så länge veckomåttet hålls"],
+    ratt:0,
+    fk:"Den här ramen är själva definitionen av formen, och skälet till att normalarbetstid inte går att lägga på kvällar eller helger. Ett helgpass blir då beordrad övertid i stället för ordinarie arbetstid.",
+    kalla:"Unionen § 4 mom 2:1 · SJF 6.2.1" },
+
+  { kat:"Mått",
+    q:"Produktionsarbetstid är 36,5 timmar i snitt per sjudagarsperiod. Vad händer med helgdagar som infaller i perioden?",
+    alt:["Varje helgdag räknas av från måttet",
+         "Måttet gäller oberoende av helgdagar",
+         "Halva dagen räknas av per helgdag",
+         "Helgdagar räknas av först från och med tre stycken"],
+    ratt:1,
+    fk:"Avtalet säger uttryckligen oberoende av under perioden infallande helgdagar. Det skiljer produktionsarbetstid från de andra två formerna, där måttet räknas per helgfri vecka och arbetsfria vardagar dras av.",
+    kalla:"Unionen § 4 mom 2:2 · SJF 6.2.2" },
+
+  { kat:"Kväll och helg",
+    q:"Hur många kvälls- eller nattpass per fyraveckorsperiod är huvudregeln vid produktionsarbetstid?",
+    alt:["Högst 8", "Högst 11", "Högst 14", "Ingen gräns, så länge veckovilan hålls"],
+    ratt:1,
+    fk:"Upp till elva gånger per fyraveckorsperiod, räknat på tid som infaller 18.00–06.00. Perioderna räknas v. 1–4, 5–8 och så vidare enligt vårt lokala avtal.",
+    kalla:"Unionen § 4 mom 2:2:2 · SJF 6.2.2.2 · lokalt § 4" },
+
+  { kat:"Kväll och helg",
+    q:"Du lägger tolv kvällspass på en medarbetare under en fyraveckorsperiod. Vad händer?",
+    alt:["Det går inte utan lokal överenskommelse",
+         "Inget särskilt, elva är bara ett riktvärde",
+         "Veckoarbetstiden sänks till 34,5 timmar i genomsnitt",
+         "Medarbetaren får ett extra OB-tillägg på 12 procent"],
+    ratt:2,
+    fk:"Tolv eller tretton gånger är tillåtet, men veckoarbetstiden sänks då från 36,5 till 34,5 timmar i genomsnitt. Det är alltså inget fel — det är en avvägning: fler kvällar växlas mot kortare arbetsvecka.",
+    kalla:"Unionen § 4 mom 2:2:2 · SJF 6.2.2.2" },
+
+  { kat:"Kväll och helg",
+    q:"Vad krävs för att lägga fjorton till sexton kvällspass per fyraveckorsperiod?",
+    alt:["Enbart medarbetarens samtycke",
+         "Lokal överenskommelse — och veckomåttet blir 34,5 timmar",
+         "Ett beslut av enhetschef efter MBL-förhandling",
+         "Det går inte alls"],
+    ratt:1,
+    fk:"Fjorton till sexton kräver en lokal överenskommelse med facklig organisation, och ger liksom tolv till tretton 34,5 timmars veckoarbetstid. Över sexton finns inget utrymme.",
+    kalla:"Unionen § 4 mom 2:2:2 · SJF 6.2.2.2" },
+
+  { kat:"Avräkning",
+    q:"Hur ofta avräknas den genomsnittliga veckoarbetstiden för produktionsarbetstid efter avtalsändringen 2025?",
+    alt:["Per kalendermånad",
+         "Per kvartal",
+         "Per halvår: 1 april–30 september och 1 oktober–31 mars",
+         "Per kalenderår"],
+    ratt:2,
+    fk:"Avräkningsperioden utökades från tre till sex månader i 2025 års avtal, och SVT valde samma perioder som redan gällde för personlig arbetstid. Bra att komma ihåg: schemaläggnings- och varselreglerna ändrades inte, så etapp 1 är fortfarande ett kvartalsschema.",
+    kalla:"Centrala avtalen 2025 · SVT:s ledarnyhet 2025-06-23" },
+
+  { kat:"Formerna",
+    q:"Vad kännetecknar personlig arbetstid jämfört med de andra formerna?",
+    alt:["Högre veckomått och rätt till extra övertidsersättning",
+         "Samma mått som normalarbetstid, men ingen särskild övertidskompensation — OB ligger kvar",
+         "Lägre veckomått och fri förläggning utan skyddsregler",
+         "Samma som produktionsarbetstid, men utan schema"],
+    ratt:1,
+    fk:"Måttet är 39 t 10 m, precis som normalarbetstid. Syftet är individuell förläggning, inte mer arbetstid. Övertidskompensation utgår inte, men OB gör det i förekommande fall — och skyddsreglerna om vila gäller fullt ut.",
+    kalla:"Lokalt arbetstidsavtal § 3" },
+
+  { kat:"Avräkning",
+    q:"Hur mycket ordinarie arbetstid får omfördelas per halvår vid personlig arbetstid?",
+    alt:["Högst ±25 timmar", "Högst ±50 timmar", "Högst ±75 timmar", "Obegränsat inom halvåret"],
+    ratt:1,
+    fk:"Högst plus eller minus 50 timmar, med avräkning sista mars respektive sista september. Lätt att blanda ihop med flextidens ±25 timmar mellan kalendermånader, som hör till normalarbetstid.",
+    kalla:"Lokalt arbetstidsavtal § 3 och § 5" },
+
+  { kat:"Ersättning",
+    q:"Tre olika regler tar bort rätten till övertidsersättning. Hur många extra semesterdagar ger de?",
+    alt:["Fem dagar i samtliga tre fall",
+         "Tre dagar i samtliga tre fall",
+         "Fem vid inkomstbasbeloppsregeln, fem vid central undantagsöverenskommelse, tre vid personlig arbetstid",
+         "Tre vid inkomstbasbeloppsregeln, fem vid de andra två"],
+    ratt:2,
+    fk:"Lön över ett inkomstbasbelopp ger fem dagar automatiskt. Den centrala undantagsöverenskommelsen ger fem dagar och/eller högre lön. Personlig arbetstid, som är lokalt reglerad, ger tre dagar och/eller lönetillägg.",
+    kalla:"Unionen § 4 mom 1:2 och 1:3 · SJF 6.1.1 och 8.2.1 · lokalt § 3" },
+
+  { kat:"Vila",
+    q:"Hur lång ska veckovilan minst vara?",
+    alt:["35 timmar", "48 timmar", "58 timmar", "72 timmar"],
+    ratt:2,
+    fk:"58 timmar sammanhängande, alltså rejält mycket mer än EU-direktivets 35. I praktiken betyder det två hela lediga dygn i sträck. Dygnsvilan mellan två ordinarie pass är minst 11 timmar.",
+    kalla:"Unionen § 4 mom 2:2:2 · SJF 6.2.2.2" },
+
+  { kat:"Kväll och helg",
+    q:"En medarbetare med normalarbetstid arbetar en lördag. Vad är det i avtalets mening?",
+    alt:["Ordinarie arbetstid som förskjutits",
+         "Beordrad övertid — inte ordinarie arbetstid",
+         "Produktionsarbetstid för den dagen",
+         "Ordinarie arbetstid med förhöjt OB"],
+    ratt:1,
+    fk:"Eftersom normalarbetstid bara får läggas 07–18 måndag till fredag blir helgarbetet övertid. Det ersätts med månadslönen delat med 72 per timme eller två timmars kompledighet, räknas av från de 150 timmarna allmän övertid, och fyller inte veckomåttet.",
+    kalla:"Unionen § 4 mom 2:1 och mom 4 · SJF 6.2.1 och 8.2" },
+
+  { kat:"Vila",
+    q:"Med vilken framförhållning får arbetstidens förläggning ändras i ett lagt schema?",
+    alt:["7 dagar", "14 dagar som huvudregel", "21 dagar", "28 dagar utan undantag"],
+    ratt:2,
+    fk:"Schema läggs i lägst 28-dagarsperioder och ändringar kräver 21 dagars varsel. Utlagd veckovila kan aldrig ändras med kortare framförhållning än 28 dagar. Fjorton dagar är enda tillåtna alternativet, bara där enhetschef beslutat det efter MBL-förhandling, och då höjs OB med 12 procent.",
+    kalla:"Unionen § 4 mom 2:2:1 · SJF 6.2.2.1 · lokalt § 4" },
+
+  { kat:"Mått",
+    q:"En produktion ligger utanför ordinarie produktionslokaler och pågår i sex dygn. Vilket arbetstidsmått gäller för deltagarna?",
+    alt:["Var och en behåller sitt vanliga mått",
+         "36,5 timmar för alla",
+         "39 timmar och 10 minuter per helgfri sjudagarsperiod för alla, oavsett form",
+         "Måttet sätts av produktionsledningen"],
+    ratt:2,
+    fk:"Reglerna om tillfällig produktionsplats gäller från fem dygn och sätter 39 t 10 m för samtliga deltagare oavsett normal arbetstidsform. Tid utöver det egna måttet ger kompledighet timme för timme, och ändrad förläggning ska varslas som vanligt.",
+    kalla:"Unionen § 5 mom 1:4 · SJF 12.1.4" },
+
+  { kat:"Ersättning",
+    q:"En medarbetare behöver arbeta på arbetsgruppens ATK-dag. Vad ska hen få?",
+    alt:["Övertidsersättning för hela dagen",
+         "En annan ledig dag utan löneavdrag, förlagd i anslutning till helg eller veckoslut",
+         "Ett extra semestertillägg",
+         "Ingenting — ATK-dagen är frivillig"],
+    ratt:1,
+    fk:"Arbete på ATK-dagen ger ingen övertidsersättning utan en annan ledig dag under året. Tiden journalförs inte som övertid och dras inte från övertidsutrymmet, eftersom det är ett byte av en ledig dag mot en annan. Ledigheten kan inte bytas mot pengar.",
+    kalla:"SVT:s information om arbetstidsförkortning · avtalen 2025" }
+];
+
+const $ = s => document.querySelector(s);
+const NYCKEL = ["A","B","C","D"];
+let i = 0, svar = [];
+
+function visaRail() {
+  $("#rail").innerHTML = FRAGOR.map((_, n) => {
+    let k = "tick";
+    if (svar[n] !== undefined) k += svar[n] ? " ok" : " nara";
+    else if (n === i) k += " nu";
+    return `<span class="${k}"></span>`;
+  }).join("");
+}
+
+function uppdateraTally() {
+  $("#tally").innerHTML = `<b>${svar.filter(Boolean).length}</b> rätt`;
+}
+
+function visaFraga() {
+  const f = FRAGOR[i];
+  $("#counter").textContent = `Fråga ${i + 1} av ${FRAGOR.length}`;
+  uppdateraTally();
+  $("#kat").textContent = f.kat;
+  $("#fraga").textContent = f.q;
+  $("#svar").hidden = true;
+  $("#nasta").hidden = true;
+  visaRail();
+  $("#opts").innerHTML = f.alt.map((t, n) =>
+    `<button class="opt" data-n="${n}"><span class="key">${NYCKEL[n]}</span><span>${t}</span></button>`
+  ).join("");
+  $("#opts").querySelectorAll(".opt").forEach(b =>
+    b.addEventListener("click", () => svara(parseInt(b.dataset.n, 10))));
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+function svara(val) {
+  const f = FRAGOR[i];
+  const korrekt = val === f.ratt;
+  svar[i] = korrekt;
+  $("#opts").querySelectorAll(".opt").forEach((b, n) => {
+    b.disabled = true;
+    if (n === f.ratt) b.classList.add("ratt");
+    else if (n === val) b.classList.add("valt");
+    else b.classList.add("blek");
+  });
+  $("#svar").className = "svar " + (korrekt ? "r" : "n");
+  $("#svar").innerHTML =
+    `<div class="dom">${korrekt ? "Just det" : "Nästan — rätt svar är " + NYCKEL[f.ratt]}</div>
+     <div class="txt">${f.fk}</div>
+     <div class="kalla">${f.kalla}</div>`;
+  $("#svar").hidden = false;
+  $("#nasta").textContent = i === FRAGOR.length - 1 ? "Se hur det gick" : "Nästa fråga";
+  $("#nasta").hidden = false;
+  uppdateraTally();
+  visaRail();
+}
+
+function nasta() {
+  if (i === FRAGOR.length - 1) return visaResultat();
+  i++; visaFraga();
+}
+
+function rekordText() {
+  try {
+    const r = localStorage.getItem("arbetstidsprovet-basta");
+    return r ? `Ditt bästa hittills: ${r} av ${FRAGOR.length}` : "";
+  } catch (e) { return ""; }
+}
+
+function omraden() {
+  const kats = {};
+  FRAGOR.forEach((f, n) => {
+    kats[f.kat] = kats[f.kat] || { r: 0, t: 0 };
+    kats[f.kat].t++;
+    if (svar[n]) kats[f.kat].r++;
+  });
+  return kats;
+}
+
+function visaResultat() {
+  const poang = svar.filter(Boolean).length;
+  $("#prov").hidden = true;
+  $("#kvittovy").hidden = true;
+  $("#resultat").hidden = false;
+  $("#poang").textContent = poang;
+  const andel = poang / FRAGOR.length;
+  $("#omdome").innerHTML =
+    andel === 1 ? "<b>Full pott.</b> Du har koll på både formerna och gränsvärdena. Dela gärna med dig till någon som lägger schema för första gången." :
+    andel >= 0.8 ? "<b>Fint jobbat.</b> Grunderna sitter stadigt. Titta en extra gång på det som gick fel — det brukar vara siffrorna som är sega att komma ihåg." :
+    andel >= 0.5 ? "<b>Bra bit på väg.</b> Formerna har du, och siffrorna kommer med vanan. Förklaringarna nedan är en bra genväg." :
+    "<b>Kul att du gjorde det.</b> Det här är krångligt på riktigt, och skillnaderna är få men får stora följder. Läs igenom förklaringarna och kör en runda till — det brukar sitta betydligt bättre andra gången.";
+
+  const kats = omraden();
+  $("#kats").innerHTML = Object.entries(kats).map(([namn, v]) => {
+    const p = v.r / v.t;
+    return `<div class="kat"><span class="namn">${namn}</span>
+      <span class="bar"><i class="${p >= 0.75 ? "" : "halv"}" style="width:${Math.max(4, Math.round(p * 100))}%"></i></span>
+      <span class="tal">${v.r}/${v.t}</span></div>`;
+  }).join("");
+
+  const fel = FRAGOR.map((f, n) => ({ f, n })).filter(x => !svar[x.n]);
+  $("#missblock").hidden = fel.length === 0;
+  $("#miss").innerHTML = fel.map(x =>
+    `<div class="miss-item">
+       <div class="fraga">${x.f.q}</div>
+       <div class="ratt">Rätt svar: ${x.f.alt[x.f.ratt]}</div>
+       <div class="kalla">${x.f.kalla}</div>
+     </div>`).join("");
+
+  try {
+    const b = parseInt(localStorage.getItem("arbetstidsprovet-basta") || "0", 10);
+    if (poang > b) localStorage.setItem("arbetstidsprovet-basta", String(poang));
+  } catch (e) {}
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+function visaKvitto() {
+  const poang = svar.filter(Boolean).length;
+  $("#resultat").hidden = true;
+  $("#kvittovy").hidden = false;
+  $("#kpoang").textContent = poang;
+  const d = new Date();
+  $("#kdatum").textContent = d.toLocaleDateString("sv-SE");
+  const kats = omraden();
+  $("#komr").innerHTML = Object.entries(kats).map(([namn, v]) =>
+    `<span class="pill${v.r === v.t ? " full" : ""}">${namn} ${v.r}/${v.t}</span>`).join("");
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+$("#namn").addEventListener("input", e => {
+  const v = e.target.value.trim();
+  const el = $("#knamn");
+  el.textContent = v || "Genomfört prov";
+  el.classList.toggle("tom", !v);
+});
+
+function start() {
+  i = 0; svar = [];
+  $("#intro").hidden = true;
+  $("#resultat").hidden = true;
+  $("#kvittovy").hidden = true;
+  $("#prov").hidden = false;
+  visaFraga();
+}
+$("#start").addEventListener("click", start);
+$("#omstart").addEventListener("click", start);
+$("#omstart2").addEventListener("click", start);
+$("#nasta").addEventListener("click", nasta);
+$("#tillkvitto").addEventListener("click", visaKvitto);
+
+document.addEventListener("keydown", e => {
+  if ($("#prov").hidden) return;
+  if (document.activeElement && document.activeElement.tagName === "INPUT") return;
+  if (!$("#nasta").hidden && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); nasta(); return; }
+  const n = ["a","b","c","d"].indexOf(e.key.toLowerCase());
+  if (n > -1 && $("#svar").hidden) svara(n);
+});
+$("#rekord").textContent = rekordText();
+</script>
+</body>
+</html>
