@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Möteskostnad</title>
+<style>
+/* Layout: en skärm för mötesrummet – deltagare överst, stor startknapp, sedan tickande tid och kronor */
+:root {
+  --bg: #0b1218;
+  --panel: #131d26;
+  --line: #22313d;
+  --fg: #f2f6f9;
+  --muted: #8ea3b3;
+  --blue: #0F9ED5;
+  --green: #4EA72E;
+  --red: #d9534f;
+  --font: Aptos, "Aptos Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); margin: 0; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 32px 48px; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 4px 0 0; font-size: clamp(28px, 6vw, 40px); font-weight: 700; letter-spacing: -.01em; }
+h1 span { color: var(--blue); }
+
+.setup { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.setup .counter { justify-content: center; gap: 32px; }
+.setup .chips { justify-content: center; }
+.setup .hint { text-align: center; max-width: 56ch; align-self: center; line-height: 1.5; }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.label { font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+
+.counter { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.counter output { font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; min-width: 3ch; text-align: center; }
+.step { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--line); background: transparent; color: var(--fg); font: 600 28px/1 var(--font); cursor: pointer; transition: border-color .15s, background .15s; }
+.step:hover { border-color: var(--blue); background: rgba(15,158,213,.12); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 6px 12px; font: 500 14px var(--font); cursor: pointer; font-variant-numeric: tabular-nums; }
+.chip:hover { color: var(--fg); border-color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.rate { display: flex; align-items: baseline; gap: 8px; }
+.rate input { width: 100%; min-width: 0; background: transparent; border: none; border-bottom: 2px solid var(--line); color: var(--fg); font: 700 44px/1.1 var(--font); font-variant-numeric: tabular-nums; padding: 2px 0; }
+.rate input:focus { outline: none; border-color: var(--blue); }
+.rate .unit { color: var(--muted); font-size: 16px; white-space: nowrap; }
+.hint { font-size: 13px; color: var(--muted); }
+
+.go { appearance: none; border: none; cursor: pointer; width: 100%; padding: 30px 20px; border-radius: 20px; font: 700 clamp(26px, 6vw, 38px)/1 var(--font); color: #fff; background: var(--green); box-shadow: 0 10px 0 #2f6e1a; transition: transform .08s, box-shadow .08s, background .2s; }
+.go:active { transform: translateY(6px); box-shadow: 0 4px 0 #2f6e1a; }
+.go.running { background: var(--red); box-shadow: 0 10px 0 #8f2b28; }
+.go.running:active { box-shadow: 0 4px 0 #8f2b28; }
+.go:focus-visible, .step:focus-visible, .chip:focus-visible, .reset:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+.meter { display: flex; flex-direction: column; gap: 6px; text-align: center; }
+.money { font-size: clamp(56px, 16vw, 120px); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.money small { font-size: .35em; font-weight: 600; color: var(--muted); margin-left: .15em; }
+.time { font-size: clamp(28px, 7vw, 44px); font-weight: 500; color: var(--blue); font-variant-numeric: tabular-nums; }
+.persec { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pulse .money { animation: tick 1s steps(1) infinite; }
+@keyframes tick { 50% { color: #fff; } 0% { color: var(--fg); } }
+
+.reset { align-self: center; background: transparent; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 10px 20px; font: 500 15px var(--font); cursor: pointer; }
+.reset:hover { color: var(--fg); border-color: var(--muted); }
+.summary { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.summary p { margin: 0; font-size: 18px; line-height: 1.5; user-select: all; }
+.copy { align-self: flex-start; background: var(--blue); color: #fff; border: none; border-radius: 999px; padding: 10px 20px; font: 600 15px var(--font); cursor: pointer; }
+.copy:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .pulse .money { animation: none; } .go, .step { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Hur mycket kostar det här mötet oss?</div>
+      <h1>Möteskostnad<span>.</span></h1>
+    </div>
+  </header>
+
+  <section class="setup">
+    <div class="box">
+      <div class="label">Antal i mötet</div>
+      <div class="counter">
+        <button class="step" id="minus" aria-label="En person färre">−</button>
+        <output id="people" aria-live="polite">4</output>
+        <button class="step" id="plus" aria-label="En person till">+</button>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="hint">Baserat på ett Sverigesnitt för vanliga roller inom media och IT, inklusive sociala avgifter, pension och semester.</div>
+    </div>
+  </section>
+
+  <button class="go" id="go">Starta mötet</button>
+
+  <section class="meter" id="meter">
+    <div class="money"><span id="money">0</span><small>kr</small></div>
+    <div class="time" id="time">00:00:00</div>
+  </section>
+
+
+  <section class="summary" id="summary" hidden>
+    <div class="label">Sammanfattning att klistra in i möteschatten</div>
+    <p id="summaryText"></p>
+    <button class="copy" id="copy">Kopiera texten</button>
+  </section>
+
+  <button class="reset" id="reset">Nollställ</button>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const fmtKr = new Intl.NumberFormat('sv-SE', { maximumFractionDigits: 0 });
+  const fmtKr2 = new Intl.NumberFormat('sv-SE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // Timkostnad = månadslön × 12 × 1,5 (sociala avgifter, pension, semester) / 1 700 arbetade timmar per år
+  const LOAD = 1.5, HOURS = 1700;
+  const toRate = s => s * 12 * LOAD / HOURS;
+  // Normallön = snitt av journalist 45 500, TV-producent 51 000, systemutvecklare 55 500, produktägare ~60 000 kr/mån
+  const salary = 53000;
+  const rate = toRate(salary);
+  let people = 4;
+
+  // Ackumulerat så att man kan ändra antal mitt i mötet utan att historiken räknas om
+  let running = false, costAcc = 0, msAcc = 0, lastT = 0, wakeLock = null;
+
+  const chipVals = [2, 3, 5, 8, 10, 15, 20];
+  chipVals.forEach(v => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = v; b.dataset.v = v;
+    b.addEventListener('click', () => setPeople(v));
+    $('chips').appendChild(b);
+  });
+
+  function accrue(now) {
+    if (running) {
+      const dt = now - lastT;
+      msAcc += dt;
+      costAcc += people * rate * dt / 3600000;
+      lastT = now;
+    }
+  }
+  function setPeople(n) {
+    accrue(performance.now());
+    people = Math.max(1, Math.min(999, n));
+    $('people').textContent = people;
+    document.querySelectorAll('#chips .chip').forEach(c => c.setAttribute('aria-pressed', Number(c.dataset.v) === people));
+    render();
+  }
+  // Håll inne + eller − för att stega snabbare (1, sedan 5, sedan 10 i taget)
+  function holdStep(btn, dir) {
+    let timer = null, count = 0;
+    const step = () => {
+      const size = count < 8 ? 1 : count < 24 ? 5 : 10;
+      const next = size === 1 ? people + dir : Math.round((people + dir * size) / size) * size;
+      setPeople(next);
+      count++;
+      timer = setTimeout(step, count < 3 ? 350 : 90);
+    };
+    const stop = () => { clearTimeout(timer); timer = null; count = 0; };
+    btn.addEventListener('pointerdown', e => { e.preventDefault(); stop(); step(); });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+    btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPeople(people + dir); } });
+  }
+  holdStep($('minus'), -1);
+  holdStep($('plus'), 1);
+
+  async function keepAwake(on) {
+    try {
+      if (on && 'wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
+      else if (!on && wakeLock) { await wakeLock.release(); wakeLock = null; }
+    } catch (e) {}
+  }
+
+  $('go').addEventListener('click', () => {
+    const now = performance.now();
+    if (running) { accrue(now); running = false; keepAwake(false); }
+    else { running = true; lastT = now; keepAwake(true); loop(); }
+    render();
+  });
+  $('reset').addEventListener('click', () => {
+    running = false; costAcc = 0; msAcc = 0; keepAwake(false); render();
+  });
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function render() {
+    const s = Math.floor(msAcc / 1000);
+    $('money').textContent = costAcc < 100 ? fmtKr2.format(costAcc) : fmtKr.format(costAcc);
+    $('time').textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
+    const go = $('go');
+    go.classList.toggle('running', running);
+    go.textContent = running ? 'Stoppa mötet' : (msAcc > 0 ? 'Fortsätt mötet' : 'Starta mötet');
+    const showSummary = !running && msAcc >= 1000;
+    $('summary').hidden = !showSummary;
+    if (showSummary) $('summaryText').textContent = summaryText();
+    $('meter').classList.toggle('pulse', running);
+    $('reset').hidden = msAcc === 0;
+  }
+  function durationText(ms) {
+    const min = Math.round(ms / 60000);
+    if (min < 1) return `${Math.max(1, Math.round(ms / 1000))} sekunder`;
+    const h = Math.floor(min / 60), m = min % 60;
+    const mt = `${m} ${m === 1 ? 'minut' : 'minuter'}`;
+    if (!h) return mt;
+    const ht = `${h} ${h === 1 ? 'timme' : 'timmar'}`;
+    return m ? `${ht} och ${mt}` : ht;
+  }
+  function summaryText() {
+    const c = costAcc;
+    const approx = c >= 1000 ? Math.round(c / 100) * 100 : c >= 100 ? Math.round(c / 10) * 10 : Math.round(c);
+    let t = `Det här mötet pågick i ${durationText(msAcc)} med ${people} deltagare och kostade oss ungefär ${fmtKr.format(approx)} kr`;
+    return t + `. (Baserat på ett Sverigesnitt för vanliga roller inom media och IT, inklusive avgifter.)`;
+  }
+  $('copy').addEventListener('click', () => {
+    const text = $('summaryText').textContent, btn = $('copy');
+    const done = () => { btn.textContent = 'Kopierad!'; setTimeout(() => btn.textContent = 'Kopiera texten', 2000); };
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents($('summaryText'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Markerad – tryck Cmd/Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+  function loop() {
+    if (!running) return;
+    accrue(performance.now());
+    render();
+    requestAnimationFrame(loop);
+  }
+  document.addEventListener('visibilitychange', () => { if (running && document.visibilityState === 'visible') keepAwake(true); });
+
+  setPeople(people);
+})();
+</script>
+
+</body>
+</html>
