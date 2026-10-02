@@ -186,17 +186,20 @@ h1 span { color: var(--blue); }
     running = false; costAcc = 0; msAcc = 0; keepAwake(false); render();
   });
 
+  // Uppdatera bara text som faktiskt ändrats. Safari tappar klick på en knapp
+  // om dess text byts ut varje bildruta medan man trycker.
+  function setText(el, t) { if (el.textContent !== t) el.textContent = t; }
   function pad(n) { return String(n).padStart(2, '0'); }
   function render() {
     const s = Math.floor(msAcc / 1000);
-    $('money').textContent = costAcc < 100 ? fmtKr2.format(costAcc) : fmtKr.format(costAcc);
-    $('time').textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
+    setText($('money'), costAcc < 100 ? fmtKr2.format(costAcc) : fmtKr.format(costAcc));
+    setText($('time'), `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`);
     const go = $('go');
     go.classList.toggle('running', running);
-    go.textContent = running ? 'Stoppa mötet' : (msAcc > 0 ? 'Fortsätt mötet' : 'Starta mötet');
+    setText(go, running ? 'Stoppa mötet' : (msAcc > 0 ? 'Fortsätt mötet' : 'Starta mötet'));
     const showSummary = !running && msAcc >= 1000;
     $('summary').hidden = !showSummary;
-    if (showSummary) $('summaryText').textContent = summaryText();
+    if (showSummary) setText($('summaryText'), summaryText());
     $('meter').classList.toggle('pulse', running);
     $('reset').hidden = msAcc === 0;
   }
